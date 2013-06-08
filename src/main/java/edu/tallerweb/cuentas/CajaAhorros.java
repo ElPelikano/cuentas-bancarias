@@ -5,14 +5,33 @@ package edu.tallerweb.cuentas;
  * quinta extracción de dinero se cobre un costo adicional
  * por extracción de $ 6
  */
-public class CajaAhorros {
-
+public class CajaAhorros extends AbstractCuenta{
+	private Integer numeroDeExtraccion;
+	
+	private static final Integer MAX = 5;
+	
+	private static final Double IMPUESTO = 6.00;
+	
+	public CajaAhorros() 
+	{
+		super();
+		
+		this.numeroDeExtraccion = 0;
+	}
+	
 	/**
 	 * No hay reglas adicionales para el depósito
 	 * @param monto a depositar
 	 */
-	public void depositar(final Double monto) {
-		throw new RuntimeException("No implementado aún");
+	public void depositar(final Double monto) 
+	{
+		if (monto > CERO) 
+		{
+			this.saldo += monto;
+		
+		} else {
+			throw new CuentaBancariaException("Debe depositar un saldo mayor a 0.");
+		}   // if (monto > CERO) 
 	}
 
 	/**
@@ -21,15 +40,42 @@ public class CajaAhorros {
 	 * @param monto a extraer
 	 */
 	public void extraer(final Double monto) {
-		throw new RuntimeException("No implementado aún");
+		if (monto > CERO) 
+		{
+			if (this.saldo >= monto && numeroDeExtraccion < MAX) 
+			{
+			
+				this.saldo -= monto;
+
+				numeroDeExtraccion++;
+			
+			} else {
+				if (this.saldo >= (monto + IMPUESTO) && numeroDeExtraccion >= MAX) 
+				{
+					this.saldo -= (monto + IMPUESTO);
+					numeroDeExtraccion++;
+				
+				} else {
+				
+					if (this.saldo < monto || this.saldo <= monto + IMPUESTO) 
+					{
+						throw new CuentaBancariaException("No posee saldo para extraer.");
+					}   // if (this.saldo < monto || this.saldo <= monto + IMPUESTO)
+				}   // if (this.saldo >= (monto + IMPUESTO) && numeroDeExtraccion >= MAX)
+			}   // if (this.saldo >= monto && numeroDeExtraccion < MAX)
+		
+		} else {
+	    	throw new CuentaBancariaException("El monto a extraer debe ser mayor a 0 .");
+		}   // if (monto > CERO)
 	}
 
 	/**
 	 * Permite saber el saldo de la cuenta
 	 * @return el saldo de la cuenta
 	 */
-	public Double getSaldo() {
-		throw new RuntimeException("No implementado aún");
+	public Double getSaldo() 
+	{
+		return this.saldo;
 	}
 
 }
